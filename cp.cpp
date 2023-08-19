@@ -1,61 +1,99 @@
-#include<iostream>
-#include <algorithm>
-#include <climits>
+#include <bits/stdc++.h>
+#define ll long long
+#define vi vector<int>
+#define pb(n) push_back(n)
+#define f(i, n) for (int i = 0; i < n; i++)
+#define ff(i, x, n) for (int i = x; i < n; i++)
 using namespace std;
-int please ( int ** input , int i , int j, int n , int m , int **dp){
-    if(i == n-1 && j == m-1 )
-        return input[i][j];
- 
-    int first = INT_MAX , second = INT_MAX, third = INT_MAX;
-    int temp = input[i][j];
-    if(dp[i][j] != -1)
-        return dp[i][j];
+void fastio()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+}
 
-    if(i+1 < n){
-        first = please(input , i+1 , j , n , m , dp);
-    }
-    if( j+1 < m){
-        second = please(input, i , j+1 , n ,m ,dp );
-    }
-    if(i+1 < n && j+1 < m)
+const int N = (int)(2e5 + 5);
+vector<int> tree[N];
+vector<int> bacha(N,0);
+void dfs(int s, int p)
+{
+    if (tree[s].size() == 0)
+        bacha[s] = 1;
+    else
+        bacha[s] = 0;
+    for (int v : tree[s])
     {
-        third = please (input , i+1, j+1 , n, m,dp);
+        if (v != p)
+        {
+            dfs(v, s);
+        }
     }
-
-    int help = min(first, min(second, third));
-    dp[i][j] = help+temp;
-
-    return help+temp;
 }
 
-int minCostPath(int **input, int n, int m) {
-    int** dp = new int*[n];
-    for(int i = 0 ; i < n ; i++) {
-        dp[i] = new int [m];
-        for(int j =0 ;  j < m ; j++) dp[i][j] = -1;
+bool bfs(int root)
+{
+    queue<int> q;
+    q.push(root);
+    vector<bool> visited(N, false);
+    visited[root] = true;
+    bool ans = false;
+    while (!q.empty())
+    {
+        int u = q.front();
+        int children = 0;
+        q.pop();
+        for (int v : tree[u])
+        {
+            if (!visited[v])
+            {
+                if(bacha[v] == 1)
+                    children++;
+                
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+        if(children >= 3)
+            return true;
+        else {
+            break;
+        }
     }
-
-    int ans = please(input , 0 , 0 , n , m, dp);
-
-    delete []dp;
-    return ans;
-
+    return false;
 }
+void solve()
+{
+    int n;
+    cin >> n;
+    ff(i, 1, n)
+    {
+        int u;
+        cin >> u;
+        // directed tree
+        tree[u].push_back(i + 1);
+    }
+    dfs(1,0);
+    bool ans = bfs(1);
+    if(ans){
+        cout << "YES" << endl;
+    }
+    else{
+        cout << "NO" << endl;
+    }
+}
+
 int main()
 {
-    int **arr,n,m,i,j;
-    cin >> n >> m;
-    arr = new int*[n];
-    for(i = 0; i < n; i++) {
-        arr[i] = new int[m];
-    }
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < m; j++) {
-            cin >> arr[i][j];
-	    }
-    }
-    
-    cout << minCostPath(arr, n, m) << endl;
-    
+    fastio();
+    // int t;
+    // cin >> t;
+    // while (t--)
+    // {
+    //     solve();
+    // }
+    solve();
     return 0;
 }

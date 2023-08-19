@@ -188,16 +188,66 @@ BinaryTreeNode<int>* removeLeafNodes(BinaryTreeNode<int> *root) {
 
 	return root;
 }
+int findCousinSum(BinaryTreeNode<int>* root, int val)
+{
+    if (root == NULL || root->data == val)
+        return -1;
+ 
+    int temp = 0;
+ 
+    queue<BinaryTreeNode<int>*> q;
+    q.push(root);
+ 
+    bool check = false;
+ 
+    while (!q.empty()) {
+ 
+        if (check == true) {
+            return temp;
+        }
+ 
+
+    int size = q.size();
+        temp = 0;
+ 
+        while (size > 0) {
+            root = q.front();
+            q.pop();
+
+            if ((root->left && root->left->data == val)
+                || (root->right && root->right->data == val)) {
+                check = true;
+            }
+ 
+
+            else {
+                if (root->left) {
+                    temp += root->left->data;
+                    q.push(root->left);
+                }
+ 
+                if (root->right) {
+                    temp += root->right->data;
+                    q.push(root->right);
+                }
+            }
+ 
+            size--;
+        }
+    }
+ 
+    return -1;
+}
 
 int main()
 {
     BinaryTreeNode<int> *root = takeInputLevelWise();
-    // inOrder(root);
-    // pair<int, int> p = heightDiameter(root);
-    // cout << "Height : " << p.first << endl;
-    // cout << "Diameter : " << p.second << endl;
-    root = removeLeafNodes(root);
+   
+    // root = removeLeafNodes(root);
     printLevelWise(root);
-    // delete root;
+    cout << "Ans" << endl;
+    cout << findCousinSum(root, 13) << "\n";
+    cout << findCousinSum(root, 7) << "\n";
+    
     return 0;
 }

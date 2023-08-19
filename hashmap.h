@@ -4,7 +4,7 @@ using namespace std;
 template <typename V>
 class MapNode
 {
-    public: 
+public:
     string key;
     V value;
     MapNode *next;
@@ -75,7 +75,7 @@ private:
     void rehash()
     {
         MapNode<V> **temp = buckets;
-        buckets = new MapNode<V>*[2 * numBuckets];
+        buckets = new MapNode<V> *[2 * numBuckets];
         for (int i = 0; i < 2 * numBuckets; i++)
         {
             buckets[i] = NULL;
@@ -92,23 +92,23 @@ private:
             {
                 string key = head->key;
                 V value = head->value;
-                insert(key , value);
+                insert(key, value);
                 head = head->next;
             }
         }
 
-        for(int i = 0 ; i < oldBucketCount ; i++)
+        for (int i = 0; i < oldBucketCount; i++)
         {
             MapNode<V> *head = temp[i];
             delete head;
         }
 
-        delete [] temp;
+        delete[] temp;
     }
 
 public:
-
-    double getLoadFactor () {
+    double getLoadFactor()
+    {
         double loadFactor = (1.0 * count) / numBuckets;
         return loadFactor;
     }
